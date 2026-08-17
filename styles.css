@@ -220,18 +220,28 @@ body.no-hero-photo .hero__word .ch--outline{ -webkit-text-stroke-color:var(--ink
 /* На вузькому екрані постать ширша за слово й повністю його ховає,
    тож розкладаємо їх одне під одним, а літери робимо суцільними. */
 @media (max-width: 700px){
-  .hero__stage{ flex-direction:column; justify-content:flex-end; }
+  /* стос центруємо: при flex-end угорі лишалася третина порожнього екрана,
+     а постать притискало до нижнього підпису */
+  .hero__stage{ flex-direction:column; justify-content:center; }
+
+  /* 8svh тримає пару «слово + постать» у межах екрана на низьких екранах,
+     17vw — щоб слово влізло в рядок на вузьких.
+     Саме svh, а не vh: на iOS vh — це висота при схованому рядку адреси,
+     тоді як сама секція має min-height:100svh. Через цей розбіжний відлік
+     композиція не вміщалася, поки рядок адреси видно. */
+  .hero__stage > *{ --word: min(17vw, 8svh); }
 
   .hero__photo{
     position:static; transform:none;
-    height:auto; max-height:56vh;
-    margin:-.16em auto 0;
+    /* висота в одиницях --word, як і на десктопі; від'ємний відступ теж,
+       інакше -.16em рахувався від власного 16px шрифту й давав ~2px */
+    height:calc(var(--word) * 9.2);
+    margin:calc(var(--word) * -.2) auto 0;
     animation-name:fadeUp;
   }
-  .hero__photo img{ width:auto; height:auto; max-height:56vh; }
+  .hero__photo img{ height:100%; width:auto; max-height:none; }
 
-  /* у стосі слово повертається у звичайний потік; 17vw — щоб влізло в рядок */
-  .hero__word{ position:static; font-size:17vw; }
+  .hero__word{ position:static; font-size:var(--word); }
   .hero__word .ch--outline{
     color:var(--ink);
     -webkit-text-stroke-width:0;
