@@ -70,13 +70,63 @@
     targets.forEach(function (el) { navIO.observe(el); });
   }
 
+  /* --- перегляд сертифіката на весь екран --- */
+  var box = document.getElementById('lightbox');
+  var boxImg = document.getElementById('lightboxImg');
+  var boxCap = document.getElementById('lightboxCaption');
+  var lastFocused = null;
+
+  function openBox(fig) {
+    var img = fig.querySelector('img');
+    var cap = fig.querySelector('figcaption');
+    if (!img) return;
+
+    lastFocused = fig;
+    boxImg.src = img.currentSrc || img.src;
+    boxImg.alt = img.alt;
+    boxCap.textContent = cap ? cap.textContent : '';
+    box.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    box.querySelector('.lightbox__close').focus();
+  }
+
+  function closeBox() {
+    box.classList.remove('is-open');
+    document.body.style.overflow = '';
+    if (lastFocused) lastFocused.focus();
+    // прибираємо джерело трохи згодом, щоб не блимало під час закриття
+    window.setTimeout(function () {
+      if (!box.classList.contains('is-open')) boxImg.src = '';
+    }, 400);
+  }
+
+  if (box) {
+    document.querySelectorAll('.cert').forEach(function (fig) {
+      fig.addEventListener('click', function () { openBox(fig); });
+      fig.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openBox(fig);
+        }
+      });
+    });
+
+    box.addEventListener('click', closeBox);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && box.classList.contains('is-open')) closeBox();
+    });
+  }
+
   /* --- легкий паралакс фото в герої --- */
   // трансформуємо саме <img>: у контейнера є власна анімація появи,
   // а вона в каскаді перебиває інлайнові стилі
   var heroPhoto = document.querySelector('.hero__photo img');
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (heroPhoto && !reduced) {
+  // на мобільному фото стоїть у потоці — паралакс там лише зсував би його
+  var wide = window.matchMedia('(min-width: 701px)').matches;
+
+  if (heroPhoto && !reduced && wide) {
     var raf = false;
     window.addEventListener('scroll', function () {
       if (raf) return;

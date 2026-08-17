@@ -24,9 +24,11 @@ images/       фото та сертифікати (див. images/README.md)
 
 ## Зображення
 
-Файли ще не додані — покладіть їх у `images/` за іменами з
-[images/README.md](images/README.md). Поки файлу немає, блок ховається або
-показує заглушку, тож сторінка не ламається.
+Усі на місці, опис — в [images/README.md](images/README.md). Оригінали
+лежать в `images/source/`. Якщо якийсь файл зникне, блок сховається або
+покаже заглушку — сторінка не зламається.
+
+Сертифікати відкриваються на весь екран по кліку (Esc або клік — закрити).
 
 ## Локальний перегляд
 
@@ -38,9 +40,12 @@ python3 -m http.server 8000
 
 ## Публікація на GitHub Pages
 
-Для адреси `https://<username>.github.io` репозиторій має називатися саме
-`<username>.github.io`. Далі в **Settings → Pages** вибрати
-*Deploy from a branch* → `main` / `root`.
+Репозиторій: `ghostishev/ghostishev.github.io` → сайт публікується на
+**https://ghostishev.github.io**
+
+Увімкнути один раз: **Settings → Pages → Build and deployment → Source:
+*Deploy from a branch*** → бранч `main`, папка `/ (root)` → **Save**.
+Далі кожен `git push` у `main` автоматично оновлює сайт (30–60 секунд).
 
 ## Що варто оновити перед публікацією
 

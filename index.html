@@ -44,7 +44,7 @@
       <span class="ch">П</span><span class="ch">О</span><span class="ch">Р</span><span class="ch">Т</span><span class="ch ch--outline">Ф</span><span class="ch ch--outline">О</span><span class="ch">Л</span><span class="ch">І</span><span class="ch">О</span>
     </h1>
     <div class="hero__photo">
-      <img src="images/hero.png" alt="Олена Чумаченко" onerror="this.closest('.hero__photo').classList.add('is-empty');document.body.classList.add('no-hero-photo')">
+      <img src="images/hero.png" width="640" height="1403" fetchpriority="high" alt="Олена Чумаченко" onerror="this.closest('.hero__photo').classList.add('is-empty');document.body.classList.add('no-hero-photo')">
     </div>
   </div>
 
@@ -64,7 +64,7 @@
 
   <div class="about">
     <figure class="about__photo reveal">
-      <img src="images/portrait.jpg" alt="Олена Чумаченко" onerror="this.closest('.about__photo').classList.add('is-empty')">
+      <img src="images/portrait.jpg" width="978" height="1500" loading="lazy" alt="Олена Чумаченко сидить у парку восени" onerror="this.closest('.about__photo').classList.add('is-empty')">
     </figure>
 
     <div class="about__body">
@@ -138,10 +138,22 @@
   </article>
 
   <div class="certs reveal">
-    <figure class="cert"><img src="images/cert-smm.jpg" alt="Сертифікат: SMM-менеджмент" loading="lazy" onerror="this.closest('.cert').classList.add('is-empty')"><figcaption>SMM-менеджмент</figcaption></figure>
-    <figure class="cert"><img src="images/cert-shooting.jpg" alt="Сертифікат: зйомка контенту для бізнесу" loading="lazy" onerror="this.closest('.cert').classList.add('is-empty')"><figcaption>Зйомка контенту</figcaption></figure>
-    <figure class="cert"><img src="images/cert-nisha.jpg" alt="Сертифікат: SMM-дизайн у Figma" loading="lazy" onerror="this.closest('.cert').classList.add('is-empty')"><figcaption>SMM-дизайн у Figma</figcaption></figure>
-    <figure class="cert"><img src="images/cert-blog.jpg" alt="Сертифікат: книжковий блог" loading="lazy" onerror="this.closest('.cert').classList.add('is-empty')"><figcaption>Книжковий блог</figcaption></figure>
+    <figure class="cert" role="button" tabindex="0" aria-label="Відкрити сертифікат: SMM-менеджмент">
+      <img src="images/cert-smm.jpg" width="1600" height="1128" alt="Сертифікат Центру Едукації: курс SMM-менеджмент, 30 годин, травень–червень 2025" loading="lazy" onerror="this.closest('.cert').classList.add('is-empty')">
+      <figcaption>SMM-менеджмент · Центр Едукації</figcaption>
+    </figure>
+    <figure class="cert" role="button" tabindex="0" aria-label="Відкрити сертифікат: зйомка контенту для бізнесу">
+      <img src="images/cert-shooting.jpg" width="1600" height="1128" alt="Сертифікат Центру Едукації: курс «Зйомка контенту для бізнесу», жовтень–листопад 2025" loading="lazy" onerror="this.closest('.cert').classList.add('is-empty')">
+      <figcaption>Зйомка контенту · Центр Едукації</figcaption>
+    </figure>
+    <figure class="cert" role="button" tabindex="0" aria-label="Відкрити сертифікат: SMM-дизайн у Figma">
+      <img src="images/cert-nisha.jpg" width="1600" height="1152" alt="Сертифікат nisha.space: курс «SMM-дизайн у Figma»" loading="lazy" onerror="this.closest('.cert').classList.add('is-empty')">
+      <figcaption>SMM-дизайн у Figma · nisha.space</figcaption>
+    </figure>
+    <figure class="cert" role="button" tabindex="0" aria-label="Відкрити сертифікат: книжковий блог">
+      <img src="images/cert-blog.jpg" width="1131" height="1600" alt="Сертифікат Litosvita: інтенсив «Як створити та розвивати книжковий блог», 8 годин, 8–11.12.2025" loading="lazy" onerror="this.closest('.cert').classList.add('is-empty')">
+      <figcaption>Книжковий блог · Litosvita</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -203,7 +215,7 @@
 <!-- ============ CONTACT ============ -->
 <section class="contact" id="contact">
   <span class="section__num">05 — Контакти</span>
-  <h2 class="contact__title">Зробимо вашу<br>сторінку живою</h2>
+  <h2 class="contact__title">Зроблю вашу<br>сторінку живою</h2>
   <a class="contact__cta" href="https://t.me/olena_chumachenko" target="_blank" rel="noopener">
     <span>Написати в Telegram</span>
     <i>→</i>
@@ -212,6 +224,12 @@
 </section>
 
 </main>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Перегляд сертифіката">
+  <button class="lightbox__close" type="button" aria-label="Закрити">&times;</button>
+  <img class="lightbox__img" id="lightboxImg" src="" alt="">
+  <p class="lightbox__caption" id="lightboxCaption"></p>
+</div>
 
 <footer class="footer">
   <span>Content Creator &amp; SMM</span>
