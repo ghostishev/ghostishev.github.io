@@ -117,27 +117,4 @@
     });
   }
 
-  /* --- легкий паралакс фото в герої --- */
-  // трансформуємо саме <img>: у контейнера є власна анімація появи,
-  // а вона в каскаді перебиває інлайнові стилі
-  var heroPhoto = document.querySelector('.hero__photo img');
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // на мобільному фото стоїть у потоці — паралакс там лише зсував би його
-  var wide = window.matchMedia('(min-width: 701px)').matches;
-
-  if (heroPhoto && !reduced && wide) {
-    var raf = false;
-    window.addEventListener('scroll', function () {
-      if (raf) return;
-      raf = true;
-      window.requestAnimationFrame(function () {
-        var y = window.scrollY;
-        if (y < window.innerHeight) {
-          heroPhoto.style.transform = 'translateY(' + (y * 0.12) + 'px)';
-        }
-        raf = false;
-      });
-    }, { passive: true });
-  }
 })();

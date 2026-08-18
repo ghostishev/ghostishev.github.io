@@ -105,143 +105,41 @@ a{ color:inherit; }
 }
 
 /* ===================== ГЕРОЙ ===================== */
+/* Герой — одна статична картинка: слово, постать і підписи вже зведені
+   в самому зображенні, тож жодної композиції на CSS тут більше немає. */
 .hero{
   position:relative; z-index:2;
   min-height:100svh;
-  display:flex; flex-direction:column; justify-content:space-between;
-  padding:28px var(--pad) 28px;
-  overflow:hidden;
-}
-
-.hero__meta{
-  display:flex; justify-content:space-between; align-items:center;
-  font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase;
-  color:var(--ink-soft);
-  opacity:0; animation:fadeUp .9s var(--ease) .15s forwards;
-}
-.hero__meta--bottom{ animation-delay:.9s; }
-@media (max-width: 900px){ .hero__meta{ font-size:10px; } }
-
-.hero__stage{
-  position:relative; flex:1;
   display:flex; align-items:center; justify-content:center;
-  min-height:0;
-  container-type:inline-size;
+  padding:0;
+  overflow:hidden;
+  /* тон підкладки збігається з фоном самої картинки, тож поля навколо
+     неї на будь-якій пропорції екрана не читаються як окремий прямокутник */
+  background:#FEF8EC;
 }
 
-/* Єдиний масштаб для слова й фото. Поки вони залежали від різних осей
-   (слово — vw, фото — vh), їхнє взаємне розташування «пливло» щоразу,
-   коли мінялася висота вікна.
-   20cqw, а не vw: vw включає ширину смуги прокрутки, тож слово ставало
-   ширшим за контейнер і переповнення зсувало його вправо — фото лишалося
-   по центру, і пара «ФО» з'їжджала. cqw рахується від ширини сцени. */
-.hero__stage > *{
-  --word: max(60px, min(20cqw, 27vh, 290px));
+.hero__img{
+  display:block;
+  width:100%; height:auto;
+  max-width:1600px;
+  max-height:100svh;
+  object-fit:contain;
+  opacity:0; animation:fadeUp 1s var(--ease) .15s forwards;
 }
 
-/* велике слово ПОРТФОЛІО */
-.hero__word{
-  /* Слово прив'язане до тієї ж нижньої межі, що й фото, і на тій самій
-     відстані в одиницях --word. Інакше воно центрувалося у сцені змінної
-     висоти й на високих вікнах «спливало» над головою.
-     z-index:auto — щоб контурні літери могли піднятися над фото. */
-  position:absolute; left:0; right:0; bottom:calc(var(--word) * 1.26);
-  z-index:auto; margin:0;
-  font-family:"Oswald", "Arial Narrow", sans-serif;
-  font-weight:600;
-  font-size:var(--word);
-  line-height:.86;
-  letter-spacing:-.01em;
-  text-align:center;
-  white-space:nowrap;
-  color:var(--ink);
-  user-select:none;
+.visually-hidden{
+  position:absolute; width:1px; height:1px;
+  margin:-1px; padding:0; border:0;
+  clip-path:inset(50%); overflow:hidden; white-space:nowrap;
 }
-.hero__word .ch{
-  display:inline-block;
-  opacity:0;
-  transform:translateY(.28em);
-  animation:charIn .95s var(--ease) forwards;
-}
-.hero__word .ch:nth-child(1){ animation-delay:.20s }
-.hero__word .ch:nth-child(2){ animation-delay:.26s }
-.hero__word .ch:nth-child(3){ animation-delay:.32s }
-.hero__word .ch:nth-child(4){ animation-delay:.38s }
-.hero__word .ch:nth-child(5){ animation-delay:.44s }
-.hero__word .ch:nth-child(6){ animation-delay:.50s }
-.hero__word .ch:nth-child(7){ animation-delay:.56s }
-.hero__word .ch:nth-child(8){ animation-delay:.62s }
-.hero__word .ch:nth-child(9){ animation-delay:.68s }
 
-/* літери, що «лягають» поверх фото — контурні */
-.hero__word .ch--outline{
-  color:transparent;
-  -webkit-text-stroke:2px var(--cream);
-  z-index:3; position:relative;
-}
+/* на вузькому екрані картинка 16:9 займає лише вузьку смугу, тож тримати
+   під неї цілий екран немає сенсу — герой стискається до її висоти */
 @media (max-width: 700px){
-  .hero__word .ch--outline{ -webkit-text-stroke-width:1.4px; }
-}
-/* без фото контурні літери мають бути видимі на кремовому */
-body.no-hero-photo .hero__word .ch--outline{ -webkit-text-stroke-color:var(--ink); }
-
-/* фото поверх слова */
-.hero__photo{
-  /* Розмір і зсув — у частках --word, тому постать завжди накриває
-     однакову ділянку слова: пару «ФО», що стоїть правіше за його центр. */
-  position:absolute; left:calc(50% + var(--word) * .335); bottom:0;
-  transform:translateX(-50%);
-  height:calc(var(--word) * 3.1); z-index:2;
-  opacity:0; animation:photoIn 1.2s var(--ease) .35s forwards;
-  pointer-events:none;
-}
-.hero__photo img{
-  /* max-width:none — глобальний max-width:100% на вузьких екранах
-     стискав фото до кількох сотень пікселів заввишки */
-  height:100%; width:auto; max-width:none;
-  object-fit:contain; object-position:bottom center;
-  filter:drop-shadow(0 30px 60px rgba(62,74,91,.16));
-}
-/* якщо фото ще не додане — не показуємо порожню іконку */
-.hero__photo.is-empty{ display:none; }
-.hero__photo.is-empty img{ display:none; }
-
-.hero__scroll{ display:inline-flex; align-items:center; gap:9px; }
-.hero__scroll i{
-  width:1px; height:22px; background:var(--ink-soft); display:block;
-  transform-origin:top; animation:scrollLine 1.9s var(--ease) infinite;
+  .hero{ min-height:auto; padding:22svh 0; }
 }
 
-@keyframes charIn{ to{ opacity:1; transform:none; } }
-@keyframes photoIn{ from{ opacity:0; transform:translateX(-50%) translateY(24px); } to{ opacity:1; transform:translateX(-50%); } }
 @keyframes fadeUp{ from{ opacity:0; transform:translateY(12px);} to{ opacity:1; transform:none;} }
-@keyframes scrollLine{ 0%{ transform:scaleY(0); opacity:0 } 40%{ transform:scaleY(1); opacity:1 } 100%{ transform:scaleY(1) translateY(22px); opacity:0 } }
-
-/* Композиція та сама, що й на десктопі: слово лежить упоперек постаті.
-   Різниця лише в пропорціях — на вузькому екрані постать перекриває
-   більшу частину слова, тож контурних літер більше, ніж «ФО».
-   Саме svh, а не vh: на iOS vh — це висота при схованому рядку адреси,
-   тоді як секція має min-height:100svh, і композиція не вміщалася,
-   поки рядок адреси видно. */
-@media (max-width: 700px){
-  .hero__stage > *{ --word: min(20cqw, 9.5svh); }
-
-  .hero__photo{
-    left:50%;                             /* по центру: контурний блок симетричний */
-    height:calc(var(--word) * 8.3);
-  }
-  .hero__word{ bottom:calc(var(--word) * 4.135); }
-
-  /* постать накриває літери 2–8 включно */
-  .hero__word .ch:nth-child(n+2):nth-child(-n+8){
-    position:relative; z-index:3;
-    color:transparent;
-    -webkit-text-stroke:1.4px var(--cream);
-  }
-  body.no-hero-photo .hero__word .ch:nth-child(n+2):nth-child(-n+8){
-    -webkit-text-stroke-color:var(--ink);
-  }
-}
 
 /* ===================== СЕКЦІЇ ===================== */
 .section{
@@ -570,7 +468,6 @@ body.no-hero-photo .hero__word .ch--outline{ -webkit-text-stroke-color:var(--ink
 @media (prefers-reduced-motion: reduce){
   *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
   .reveal{ opacity:1; transform:none; }
-  .hero__word .ch, .hero__photo, .hero__meta{ opacity:1; transform:none; }
-  .hero__photo{ transform:translateX(-50%); }
+  .hero__img{ opacity:1; transform:none; }
   html{ scroll-behavior:auto; }
 }
