@@ -356,6 +356,114 @@ a{ color:inherit; }
 }
 .lightbox__close:hover{ opacity:1; }
 
+/* ===================== РОБОТИ ===================== */
+.works{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(230px, 1fr));
+  gap:clamp(16px, 2.2vw, 30px);
+  margin-top:clamp(24px, 3vw, 40px);
+}
+
+.work{
+  margin:0;
+  cursor:zoom-in;
+  border:1px solid var(--line-soft);
+  background:var(--cream);
+  padding:12px 12px 18px;
+  transition:transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s var(--ease);
+}
+.work:hover,
+.work:focus-visible{
+  transform:translateY(-5px);
+  box-shadow:0 20px 40px rgba(62,74,91,.14);
+  border-color:var(--line);
+}
+.work:focus-visible{ outline:2px solid var(--red); outline-offset:3px; }
+
+.work > img{
+  /* height:auto обов'язковий — інакше атрибут height у розмітці
+     перебиває aspect-ratio (так само, як у .cert) */
+  width:100%; height:auto; aspect-ratio:4/5;
+  object-fit:cover; object-position:top center;
+  background:var(--cream-2);
+  transition:filter .5s var(--ease);
+  filter:saturate(.96);
+}
+.work:hover > img{ filter:saturate(1.06); }
+
+.work figcaption{ padding:14px 4px 0; }
+
+.work__kind{
+  display:block;
+  font-size:10px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--red);
+}
+.work h3{
+  font-family:"Oswald", sans-serif; font-weight:600; text-transform:uppercase;
+  font-size:clamp(15px, 1.4vw, 19px); line-height:1.18;
+  margin:9px 0 9px;
+}
+.work p{
+  margin:0;
+  font-size:.87em; line-height:1.55;
+  color:var(--ink-soft);
+}
+.work__skills{
+  display:block; margin-top:12px;
+  font-size:10px; font-weight:700; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--ink-mute);
+}
+
+/* якщо обкладинка не завантажилась — плитка лишається читабельною */
+.work.is-empty > img{ display:none; }
+.work.is-empty::before{
+  content:""; display:block; aspect-ratio:4/5;
+  background:repeating-linear-gradient(45deg, var(--cream-2) 0 10px, transparent 10px 20px);
+  border:1px dashed var(--line);
+}
+
+/* на телефоні одна обкладинка 4:5 на весь рядок з'їдала б цілий екран,
+   тож плитки стають вужчими й ідуть по дві */
+@media (max-width: 620px){
+  .works{ grid-template-columns:repeat(2, 1fr); gap:12px; }
+  .work{ padding:8px 8px 14px; }
+  .work figcaption{ padding-top:11px; }
+  .work p{ font-size:.82em; }
+  .work__skills{ margin-top:9px; }
+}
+@media (max-width: 360px){
+  .works{ grid-template-columns:1fr; }
+}
+
+/* ===================== ГОРТАННЯ В ЛАЙТБОКСІ ===================== */
+.lightbox__nav{
+  position:absolute; top:50%; transform:translateY(-50%);
+  z-index:2;
+  width:52px; height:52px;
+  display:grid; place-items:center;
+  background:rgba(253,243,227,.10);
+  border:1px solid rgba(253,243,227,.28);
+  border-radius:50%;
+  cursor:pointer;
+  font-size:30px; line-height:1; color:var(--cream);
+  transition:background .25s var(--ease), transform .25s var(--ease);
+}
+.lightbox__nav:hover{ background:rgba(253,243,227,.22); }
+.lightbox__nav[hidden]{ display:none; }
+.lightbox__nav--prev{ left:clamp(8px, 2vw, 28px); }
+.lightbox__nav--next{ right:clamp(8px, 2vw, 28px); }
+.lightbox__nav--prev:hover{ transform:translateY(-50%) translateX(-3px); }
+.lightbox__nav--next:hover{ transform:translateY(-50%) translateX(3px); }
+
+.lightbox__count{ margin-left:14px; color:rgba(253,243,227,.9); }
+.lightbox__count[hidden]{ display:none; }
+
+@media (max-width: 640px){
+  .lightbox__nav{ width:42px; height:42px; font-size:24px; }
+  /* на вузькому екрані стрілки не мають накривати саме зображення */
+  .lightbox{ grid-template-rows:1fr auto; }
+}
+
 /* ===================== КАРТКИ ПРОЄКТІВ ===================== */
 .cards{
   display:grid;
@@ -408,18 +516,38 @@ a{ color:inherit; }
 .card--cta p{ margin-top:14px; }
 
 /* ===================== КОНТАКТИ ===================== */
+/* Фінальний слайд презентації: постать із прозорим фоном поруч із
+   закликом «Готова до співпраці». Композицію не збираємо накладанням
+   на текст, як колись у герої, — постать стоїть окремою колонкою,
+   тож нічого не треба синхронізувати по масштабу. */
 .contact{
   position:relative; z-index:2;
   background:var(--ink); color:var(--cream);
-  padding:clamp(70px, 11vw, 150px) var(--pad);
-  text-align:center;
+  padding:clamp(60px, 9vw, 120px) var(--pad) 0;
+  overflow:hidden;
 }
+
+.contact__inner{
+  max-width:var(--maxw); margin:0 auto;
+  display:grid;
+  grid-template-columns:1fr minmax(240px, 420px);
+  gap:clamp(24px, 5vw, 70px);
+  align-items:end;
+}
+
+.contact__body{ padding-bottom:clamp(60px, 9vw, 120px); }
+
 .contact .section__num{ color:var(--cream); opacity:.55; border-bottom-color:rgba(253,243,227,.25); }
 
 .contact__title{
   font-family:"Oswald", sans-serif; font-weight:600; text-transform:uppercase;
-  font-size:clamp(34px, 7vw, 96px); line-height:.98; letter-spacing:.005em;
-  margin:26px 0 44px;
+  font-size:clamp(38px, 6.6vw, 92px); line-height:.98; letter-spacing:.005em;
+  margin:26px 0 22px;
+}
+
+.contact__lead{
+  margin:0 0 38px; max-width:46ch;
+  color:rgba(253,243,227,.72);
 }
 
 .contact__cta{
@@ -447,6 +575,28 @@ a{ color:inherit; }
   margin:26px 0 0;
   font-size:12px; letter-spacing:.2em; text-transform:uppercase;
   color:rgba(253,243,227,.5);
+}
+
+/* постать «стоїть» на нижньому краї секції, тож нижнього паддінга тут немає */
+.contact__figure{
+  margin:0; align-self:end;
+  display:flex; justify-content:center;
+}
+.contact__figure img{
+  width:100%; height:auto;
+  max-height:min(620px, 68vh);
+  object-fit:contain; object-position:bottom center;
+  display:block;
+}
+
+@media (max-width: 880px){
+  /* на вузькому екрані постать пішла б у надто вузьку колонку —
+     тому текст іде першим, а фото стає під ним по центру */
+  .contact{ text-align:center; padding-bottom:0; }
+  .contact__inner{ grid-template-columns:1fr; gap:0; }
+  .contact__body{ padding-bottom:clamp(36px, 7vw, 60px); }
+  .contact__lead{ margin-inline:auto; }
+  .contact__figure img{ max-height:min(440px, 52vh); }
 }
 
 /* ===================== ПІДВАЛ ===================== */

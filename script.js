@@ -70,21 +70,57 @@
     targets.forEach(function (el) { navIO.observe(el); });
   }
 
-  /* --- перегляд сертифіката на весь екран --- */
+  /* --- перегляд на весь екран: сертифікат або карусель --- */
   var box = document.getElementById('lightbox');
   var boxImg = document.getElementById('lightboxImg');
-  var boxCap = document.getElementById('lightboxCaption');
+  var boxText = document.getElementById('lightboxText');
+  var boxCount = document.getElementById('lightboxCount');
+  var btnPrev = box && box.querySelector('.lightbox__nav--prev');
+  var btnNext = box && box.querySelector('.lightbox__nav--next');
   var lastFocused = null;
+
+  var slides = [];   // список джерел поточної галереї
+  var index = 0;
+  var caption = '';
+  var altText = '';
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+  function show(i) {
+    if (!slides.length) return;
+    index = (i + slides.length) % slides.length;
+    boxImg.src = slides[index];
+    boxImg.alt = slides.length > 1
+      ? altText + ' — слайд ' + (index + 1) + ' з ' + slides.length
+      : altText;
+    boxText.textContent = caption;
+    boxCount.textContent = (index + 1) + ' / ' + slides.length;
+    boxCount.hidden = slides.length < 2;
+    if (btnPrev) btnPrev.hidden = slides.length < 2;
+    if (btnNext) btnNext.hidden = slides.length < 2;
+  }
 
   function openBox(fig) {
     var img = fig.querySelector('img');
     var cap = fig.querySelector('figcaption');
-    if (!img) return;
+    var title = cap && cap.querySelector('h3');
+    var dir = fig.getAttribute('data-gallery');
+    var count = parseInt(fig.getAttribute('data-count'), 10);
+
+    if (dir && count > 0) {
+      // карусель: images/works/<slug>/01.jpg … <count>.jpg
+      slides = [];
+      for (var i = 1; i <= count; i++) slides.push(dir + '/' + pad(i) + '.jpg');
+    } else {
+      if (!img) return;
+      slides = [img.currentSrc || img.src];
+    }
+
+    altText = img ? img.alt : '';
+    caption = title ? title.textContent : (cap ? cap.textContent : '');
 
     lastFocused = fig;
-    boxImg.src = img.currentSrc || img.src;
-    boxImg.alt = img.alt;
-    boxCap.textContent = cap ? cap.textContent : '';
+    show(0);
     box.classList.add('is-open');
     document.body.style.overflow = 'hidden';
     box.querySelector('.lightbox__close').focus();
@@ -101,7 +137,7 @@
   }
 
   if (box) {
-    document.querySelectorAll('.cert').forEach(function (fig) {
+    document.querySelectorAll('.cert, .work').forEach(function (fig) {
       fig.addEventListener('click', function () { openBox(fig); });
       fig.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -111,10 +147,33 @@
       });
     });
 
-    box.addEventListener('click', closeBox);
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && box.classList.contains('is-open')) closeBox();
+    // клік по тлу закриває, клік по стрілках і зображенні — ні
+    box.addEventListener('click', function (e) {
+      if (e.target === btnPrev || e.target === btnNext || e.target === boxImg) return;
+      closeBox();
     });
+
+    if (btnPrev) btnPrev.addEventListener('click', function () { show(index - 1); });
+    if (btnNext) btnNext.addEventListener('click', function () { show(index + 1); });
+
+    document.addEventListener('keydown', function (e) {
+      if (!box.classList.contains('is-open')) return;
+      if (e.key === 'Escape') closeBox();
+      else if (e.key === 'ArrowRight') show(index + 1);
+      else if (e.key === 'ArrowLeft') show(index - 1);
+    });
+
+    /* --- гортання свайпом --- */
+    var touchX = null;
+    box.addEventListener('touchstart', function (e) {
+      touchX = e.changedTouches[0].clientX;
+    }, { passive: true });
+    box.addEventListener('touchend', function (e) {
+      if (touchX === null || slides.length < 2) return;
+      var dx = e.changedTouches[0].clientX - touchX;
+      touchX = null;
+      if (Math.abs(dx) > 40) show(index + (dx < 0 ? 1 : -1));
+    }, { passive: true });
   }
 
 })();
